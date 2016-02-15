@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="latin1" collation="latin1_general_ci">tickit</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="booking" view="colnames">
+<left>308</left>
+<top>83</top>
+<width>101</width>
+<height>156</height>
+<sql_create_table>CREATE TABLE `booking` (
+  `id` varchar(9) collate latin1_general_ci NOT NULL default '',
+  `id_show` varchar(9) collate latin1_general_ci default NULL,
+  `username` varchar(25) collate latin1_general_ci default NULL,
+  `time` datetime default NULL,
+  `invoice_payment` varchar(25) collate latin1_general_ci default NULL,
+  `totalPrice` double default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `username` (`username`),
+  KEY `invoice_payment` (`invoice_payment`),
+  KEY `id_show` (`id_show`),
+  CONSTRAINT `booking_ibfk_4` FOREIGN KEY (`invoice_payment`) REFERENCES `payment` (`invoice`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `booking_ibfk_5` FOREIGN KEY (`id_show`) REFERENCES `show` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `booking_ibfk_6` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="payment" view="colnames">
+<left>434</left>
+<top>243</top>
+<width>106</width>
+<height>94</height>
+<sql_create_table>CREATE TABLE `payment` (
+  `invoice` varchar(25) collate latin1_general_ci NOT NULL,
+  `name` varchar(50) collate latin1_general_ci default NULL,
+  PRIMARY KEY  (`invoice`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="seat" view="colnames">
+<left>811</left>
+<top>9</top>
+<width>93</width>
+<height>140</height>
+<sql_create_table>CREATE TABLE `seat` (
+  `id` int(9) NOT NULL auto_increment,
+  `id_show` varchar(9) collate latin1_general_ci default NULL,
+  `no` int(9) default NULL,
+  `name` varchar(50) collate latin1_general_ci default NULL,
+  `status` int(9) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `id_show` (`id_show`),
+  CONSTRAINT `seat_ibfk_2` FOREIGN KEY (`id_show`) REFERENCES `show` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="show" view="colnames">
+<left>436</left>
+<top>26</top>
+<width>128</width>
+<height>206</height>
+<sql_create_table>CREATE TABLE `show` (
+  `id` varchar(9) collate latin1_general_ci NOT NULL,
+  `name` varchar(50) collate latin1_general_ci default NULL,
+  `id_plane` varchar(9) collate latin1_general_ci default NULL,
+  `id_type` int(9) default NULL,
+  `code_venue_departure` varchar(9) collate latin1_general_ci default NULL,
+  `code_venue_destination` varchar(9) collate latin1_general_ci default NULL,
+  `departure_time` datetime default NULL,
+  `arrive_time` datetime default NULL,
+  `default_price` double default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `id_plane` (`id_plane`),
+  KEY `code_venue_departure` (`code_venue_departure`),
+  KEY `code_venue_destination` (`code_venue_destination`),
+  KEY `id_type` (`id_type`),
+  CONSTRAINT `show_ibfk_3` FOREIGN KEY (`id_plane`) REFERENCES `plane` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `show_ibfk_4` FOREIGN KEY (`code_venue_departure`) REFERENCES `venue` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `show_ibfk_5` FOREIGN KEY (`code_venue_destination`) REFERENCES `venue` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `show_ibfk_6` FOREIGN KEY (`id_type`) REFERENCES `show_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="ticket" view="colnames">
+<left>177</left>
+<top>9</top>
+<width>106</width>
+<height>139</height>
+<sql_create_table>CREATE TABLE `ticket` (
+  `id` int(9) NOT NULL,
+  `id_booking` varchar(9) collate latin1_general_ci default NULL,
+  `name` varchar(50) collate latin1_general_ci default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `id_booking` (`id_booking`),
+  CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`id_booking`) REFERENCES `booking` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`id`) REFERENCES `seat` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="show_type" view="colnames">
+<left>697</left>
+<top>77</top>
+<width>94</width>
+<height>105</height>
+<sql_create_table>CREATE TABLE `show_type` (
+  `id` int(9) NOT NULL auto_increment,
+  `type` varchar(25) collate latin1_general_ci default NULL,
+  `price` double default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="user" view="colnames">
+<left>181</left>
+<top>202</top>
+<width>101</width>
+<height>207</height>
+<sql_create_table>CREATE TABLE `user` (
+  `username` varchar(25) collate latin1_general_ci NOT NULL default '',
+  `password` varchar(15) collate latin1_general_ci default NULL,
+  `email` varchar(50) collate latin1_general_ci default NULL,
+  `firstname` varchar(25) collate latin1_general_ci default NULL,
+  `lastname` varchar(25) collate latin1_general_ci default NULL,
+  `address` text collate latin1_general_ci,
+  `town` varchar(25) collate latin1_general_ci default NULL,
+  `country` varchar(25) collate latin1_general_ci default NULL,
+  `postcode` varchar(9) collate latin1_general_ci default NULL,
+  PRIMARY KEY  (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="venue" view="colnames">
+<left>589</left>
+<top>225</top>
+<width>88</width>
+<height>122</height>
+<sql_create_table>CREATE TABLE `venue` (
+  `code` varchar(9) collate latin1_general_ci NOT NULL,
+  `name` varchar(50) collate latin1_general_ci default NULL,
+  `location` varchar(50) collate latin1_general_ci default NULL,
+  PRIMARY KEY  (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="plane" view="colnames">
+<left>590</left>
+<top>43</top>
+<width>90</width>
+<height>106</height>
+<sql_create_table>CREATE TABLE `plane` (
+  `id` varchar(9) collate latin1_general_ci NOT NULL,
+  `name` varchar(25) collate latin1_general_ci default NULL,
+  `seat` int(9) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="admin" view="colnames">
+<left>62</left>
+<top>223</top>
+<width>97</width>
+<height>125</height>
+<sql_create_table>CREATE TABLE `admin` (
+  `id` int(9) NOT NULL auto_increment,
+  `username` varchar(25) collate latin1_general_ci default NULL,
+  `password` varchar(15) collate latin1_general_ci default NULL,
+  `name` varchar(50) collate latin1_general_ci default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+<table name="format" view="colnames">
+<left>73</left>
+<top>361</top>
+<width>86</width>
+<height>122</height>
+<sql_create_table>CREATE TABLE `format` (
+  `id` int(9) NOT NULL auto_increment,
+  `table` varchar(20) collate latin1_general_ci default NULL,
+  `code` varchar(9) collate latin1_general_ci default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
